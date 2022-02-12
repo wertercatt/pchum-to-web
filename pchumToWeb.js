@@ -3,7 +3,7 @@
 const header = '<html><head>\n \
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">\n \
 <title>%TITLE% | Log for %YEAR%-%MONTH%-%DAY%</title>\n \
-<link rel="stylesheet" href="https://jingloria.wertercatt.com/lostpawns/logs2/pesterlog-viewer.css">\n \
+<style>body { background-color: #101535; font-family: Courier New,Courier,monospace; font-weight: bold; } h1{ text-align: center; color: #FFFFFF; } .memolog { text-align: left; background-color: #FFFFFF; border: 5px solid #3F4472; height: 500px; width: 48%; padding: 5px; margin-left: auto; overflow: scroll; margin-right: auto; float: center; } .participants { text-align: left; background-color: #FFFFFF; border: 5px solid #3F4472; height: 500px; width: 22%; padding: 5px; margin-left: auto; overflow: scroll; margin-right: auto; float: right; white-space: nowrap } .memolist { text-align: left; background-color: #FFFFFF; border: 5px solid #3F4472; height: 500px; width: 22%; padding: 5px; margin-left: auto; overflow: scroll; margin-right: auto; white-space: nowrap; float: left; }</style>\n \
 <meta charset="UTF-8">\n \
 </head>\n \
 <body cz-shortcut-listen="true">\n \
