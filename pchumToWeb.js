@@ -79,9 +79,9 @@ let formatPesterlog = plog => {
   userInfo.forEach(obj => {
 
     // Look for if full chumhandles exist
-    var notiPos = tempformat.innerHTML.indexOf("[" + obj.tense + obj.chum + "]")
+    var notiPos = tempformat.innerText.indexOf("[" + obj.tense + obj.chum + "]")
     if (notiPos !== -1) {
-      obj.handle = tempformat.innerHTML.substring(tempformat.innerHTML.lastIndexOf(" ", notiPos - 2) + 1, notiPos - 1)
+      obj.handle = tempformat.innerText.substring(tempformat.innerText.lastIndexOf(" ", notiPos - 2) + 1, notiPos - 1)
     }
 
     // Create userSpans
