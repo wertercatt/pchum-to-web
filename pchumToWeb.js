@@ -2,7 +2,7 @@
 
 const header = '<html><head>\n \
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">\n \
-<title>#%TITLE% | Log for %YEAR%-%MONTH%-%DAY%</title>\n \
+<title>%TITLE% | Log for %YEAR%-%MONTH%-%DAY%</title>\n \
 <link rel="stylesheet" href="https://jingloria.wertercatt.com/lostpawns/logs2/pesterlog-viewer.css">\n \
 <meta charset="UTF-8">\n \
 </head>\n \
