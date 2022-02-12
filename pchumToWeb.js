@@ -7,7 +7,7 @@ const header = '<html><head>\n \
 <meta charset="UTF-8">\n \
 </head>\n \
 <body cz-shortcut-listen="true">\n \
-<h1>#%TITLE% | Log for %YEAR%-%MONTH%-%DAY%</h1>\n \
+<h1>%TITLE% | Log for %YEAR%-%MONTH%-%DAY%</h1>\n \
 <div class="memolist">\n \
 MEMOS\n \
 </div>\n'
