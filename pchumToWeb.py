@@ -2,6 +2,7 @@ import os
 import sys
 from bs4 import BeautifulSoup
 import json
+import re
 
 def convert(filePath):
     header = '<html><head>\n \
@@ -16,6 +17,8 @@ def convert(filePath):
     MEMOS\n \
     </div>\n'
     with open(filePath, "r") as unformattedLog:
+        formattedLog = "<!-- Original Filepath: " + filePath.split("Pesterchum-logs")[1] + "-->"
+        unformattedLogContents = unformattedLog.read()
         logName = os.path.basename(filePath)
         logInfo = {
             "mins": logName.split(".")[3],
@@ -26,8 +29,9 @@ def convert(filePath):
             "title": logName.split(".")[0],
         }
         logHeader = header.format(**logInfo)
+        formattedLog = formattedLog + "\n" + logHeader
         userInfo = []
-        unformattedLogParser = BeautifulSoup(unformattedLog.read(), 'html.parser')
+        unformattedLogParser = BeautifulSoup(unformattedLogContents, 'html.parser')
         messageSpans = unformattedLogParser.find_all("span")
         for span in messageSpans:
             spanText = span.get_text()
@@ -35,13 +39,32 @@ def convert(filePath):
                 if spanText[3] == ":":
                     chum = {
                             "chum": spanText[1:3],
-                            "color": span["style"].split(":")[1],
+                            "color": span["style"],
                             "tense": spanText[0],
                         }
                     if chum not in userInfo:
                         userInfo.append(chum)
-        print(json.dumps(logHeader, sort_keys=True, indent=4))
-        print(json.dumps(userInfo, sort_keys=True, indent=4))
+        participantsDiv = '<div class="participants">'
+        for user in userInfo:
+            userSpan = '<span style=' + user["color"] + ">"
+            searchString = "\[" + user["tense"] + user["chum"] + "\]"
+            searchResult = unformattedLogParser.find(string=re.compile(searchString))
+            if searchResult != None:
+                userSpan = userSpan + searchResult.get_text() + "</span></br>"
+            else:
+                userSpan = userSpan + user["tense"] + " ?????? [" + user["tense"] + user["chum"] + "]</span></br>"
+            participantsDiv = participantsDiv + userSpan
+        participantsDiv = participantsDiv + "</div>"
+        formattedLog = formattedLog + "\n" + participantsDiv
+        formattedLog = formattedLog + "\n<div class=memolog>\n" + unformattedLogContents
+        formattedLog = formattedLog + "\n</div>\n</body>\n</html>"
+        formattedLogDirectory = filePath.split("Pesterchum-logs")[0] + "Pesterchum-logs\\PrettifiedAndSortedByDate\\" + logInfo["year"] + "-" + logInfo["month"] + "-" + logInfo["day"] + "\\"
+        os.makedirs(formattedLogDirectory)
+        formattedLogFilename = formattedLogDirectory + os.path.basename(filePath)
+        with open(formattedLogFilename, "w") as output:
+            output.write(formattedLog)
+        # print(json.dumps(logHeader, sort_keys=True, indent=4))
+        # print(json.dumps(userInfo, sort_keys=True, indent=4))
 
 
 
