@@ -17,17 +17,41 @@ def convert(filePath):
     <div class="memolist">\n \
     MEMOS\n \
     </div>\n'
-    with open(filePath, "r") as unformattedLog:
+    with open(filePath, "r", encoding="utf-8", errors="backslashreplace") as unformattedLog:
         formattedLog = "<!-- Original Filepath: " + filePath.split("Pesterchum-logs")[1] + "-->"
         unformattedLogContents = unformattedLog.read()
         logName = os.path.basename(filePath)
+        try:
+            mins = logName.split(".")[3]
+        except IndexError as e:
+            mins = "Unknown"
+        try:
+            hour = logName.split(".")[2]
+        except IndexError as e:
+            hour = "Unknown"
+        try:
+            day = logName.split(".")[1].split("-")[2]
+        except IndexError as e:
+            day = "Unknown"
+        try:
+            month = logName.split(".")[1].split("-")[1]
+        except IndexError as e:
+            month = "Unknown"
+        try:
+            year = logName.split(".")[1].split("-")[0]
+        except IndexError as e:
+            year = "Unknown"
+        try:
+            title = logName.split(".")[0]
+        except IndexError as e:
+            title = "Unknown"
         logInfo = {
-            "mins": logName.split(".")[3],
-            "hour": logName.split(".")[2],
-            "day": logName.split(".")[1].split("-")[2],
-            "month": logName.split(".")[1].split("-")[1],
-            "year": logName.split(".")[1].split("-")[0],
-            "title": logName.split(".")[0],
+            "mins": mins,
+            "hour": hour,
+            "day": day,
+            "month": month,
+            "year": year,
+            "title": title,
         }
         logHeader = header.format(**logInfo)
         formattedLog = formattedLog + "\n" + logHeader
@@ -38,9 +62,13 @@ def convert(filePath):
             spanText = span.get_text()
             if len(spanText) > 3:
                 if spanText[3] == ":":
+                    try:
+                        color = span["style"]
+                    except KeyError as e:
+                        color = '"color:#646464"'
                     chum = {
                             "chum": spanText[1:3],
-                            "color": span["style"],
+                            "color": color,
                             "tense": spanText[0],
                         }
                     if chum not in userInfo:
@@ -48,7 +76,7 @@ def convert(filePath):
         participantsDiv = '<div class="participants">'
         for user in userInfo:
             userSpan = '<span style=' + user["color"] + ">"
-            searchString = "\[" + user["tense"] + user["chum"] + "\]"
+            searchString = re.escape("[" + user["tense"] + user["chum"] + "]")
             searchResult = unformattedLogParser.find(string=re.compile(searchString))
             if searchResult != None:
                 userSpan = userSpan + searchResult.get_text() + "</span></br>"
@@ -64,7 +92,7 @@ def convert(filePath):
         formattedLogFilename = formattedLogDirectory + os.path.basename(filePath)
         while os.path.exists(formattedLogFilename):
             formattedLogFilename = formattedLogFilename + ".dupe.html"
-        with open(formattedLogFilename, "w") as output:
+        with open(formattedLogFilename, "w", encoding="utf-8", errors="backslashreplace") as output:
             output.write(formattedLog)
         # print(json.dumps(logHeader, sort_keys=True, indent=4))
         # print(json.dumps(userInfo, sort_keys=True, indent=4))
