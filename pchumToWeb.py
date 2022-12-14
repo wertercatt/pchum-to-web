@@ -3,6 +3,7 @@ import sys
 from bs4 import BeautifulSoup
 import json
 import re
+from tqdm import tqdm
 
 def convert(filePath):
     header = '<html><head>\n \
@@ -59,14 +60,26 @@ def convert(filePath):
         formattedLog = formattedLog + "\n<div class=memolog>\n" + unformattedLogContents
         formattedLog = formattedLog + "\n</div>\n</body>\n</html>"
         formattedLogDirectory = filePath.split("Pesterchum-logs")[0] + "Pesterchum-logs\\PrettifiedAndSortedByDate\\" + logInfo["year"] + "-" + logInfo["month"] + "-" + logInfo["day"] + "\\"
-        os.makedirs(formattedLogDirectory)
+        os.makedirs(formattedLogDirectory, exist_ok=True)
         formattedLogFilename = formattedLogDirectory + os.path.basename(filePath)
+        while os.path.exists(formattedLogFilename):
+            formattedLogFilename = formattedLogFilename + ".dupe.html"
         with open(formattedLogFilename, "w") as output:
             output.write(formattedLog)
         # print(json.dumps(logHeader, sort_keys=True, indent=4))
         # print(json.dumps(userInfo, sort_keys=True, indent=4))
 
+def bulkConvert(rootPath):
+    file_paths = []
+
+    for root, dirs, files in os.walk(rootPath):
+        for name in files:
+            file_path = os.path.join(root, name)
+            if os.path.splitext(file_path)[1] == '.html':
+                file_paths += [file_path]
+    for log in tqdm(file_paths):
+        convert(log)
 
 
 if __name__ == "__main__":
-    convert(sys.argv[1])
+    bulkConvert(sys.argv[1])
