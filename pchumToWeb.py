@@ -53,7 +53,7 @@ def convert(filePath):
                 userSpan = userSpan + searchResult.get_text() + "</span></br>"
             else:
                 userSpan = userSpan + user["tense"] + " ?????? [" + user["tense"] + user["chum"] + "]</span></br>"
-            participantsDiv = participantsDiv + userSpan
+            participantsDiv = participantsDiv + "\n" + userSpan
         participantsDiv = participantsDiv + "</div>"
         formattedLog = formattedLog + "\n" + participantsDiv
         formattedLog = formattedLog + "\n<div class=memolog>\n" + unformattedLogContents
